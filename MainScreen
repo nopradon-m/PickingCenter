@@ -15,8 +15,10 @@ Screens:
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Height: =522
-            Items: "=SortByColumns(\r\n    Filter(\r\n        SNP_LoadExportSalesOrders,\r\n        DeliveryDate >= fromDatePicker_2.SelectedDate &&\r\n        DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate, 1, TimeUnit.Days) &&\r\n        (IsBlank(LoadBox.Selected) || LoadExportNo = LoadBox.Selected.cr519_loadexportno) &&\r\n        WarehouseID <> \"01-UN\" &&\r\n        (Company = companyText.Text || Company = \"dep\") &&\r\n            (IsBlank(PickBox.Selected) || \r\n            (PickBox.Selected.Value = 0 && StatusApp = \"Open\") ||\r\n            (PickBox.Selected.Value = 1 && StatusApp = \"Picking\") ||\r\n            (PickBox.Selected.Value = 2 && StatusApp = \"Picked\") ||\r\n            (PickBox.Selected.Value = 3 && StatusApp = \"Cancel\") ||\r\n            (PickBox.Selected.Value = 4 && StatusApp = \"Staged\") ||\r\n            (PickBox.Selected.Value = 5 && StatusApp = \"Loaded\")\r\n            )\r\n    ),\r\n    //\"createdon\", SortOrder.Descending,\r\n    \"cr519_loadexportno\", SortOrder.Descending,\r\n    \"cr519_linenumber\", SortOrder.Ascending\r\n   \r\n)\r\n"
-            TemplateSize: =39
+            Items: "=SortByColumns(\r\n    Filter(\r\n        SNP_LoadExportSalesOrders,\r\n        DeliveryDate >= fromDatePicker_2.SelectedDate &&\r\n        DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate, 1, TimeUnit.Days)&&\r\n        (IsBlank(LoadBox.Selected) || LoadExportNo = LoadBox.Selected.cr519_loadexportno) &&\r\n        WarehouseID <> \"01-UN\" &&\r\n        (Company = companyText.Text || Company = \"dep\") &&\r\n            (IsBlank(PickBox.Selected) || \r\n            (PickBox.Selected.Value = 0 && StatusApp = \"Open\") ||\r\n            (PickBox.Selected.Value = 1 && StatusApp = \"Picking\") ||\r\n            (PickBox.Selected.Value = 2 && StatusApp = \"Picked\") ||\r\n            (PickBox.Selected.Value = 3 && StatusApp = \"Cancel\") ||\r\n            (PickBox.Selected.Value = 4 && StatusApp = \"Staged\") ||\r\n            (PickBox.Selected.Value = 5 && StatusApp = \"Loaded\")\r\n            ) &&\r\n        (IsBlank(cmbPickingTag.Selected) || pickingTag = cmbPickingTag.Selected.Value) &&\r\n        (IsBlank(RoundBox.Selected) || round = RoundBox.Selected.Value) &&\r\n        (IsBlank(cmbPickerLoad.Selected) || pickerLoad = cmbPickerLoad.Selected.Value) &&\r\n        (!IsBlank(MPN))      \r\n    ),\r\n    //\"createdon\", SortOrder.Descending,\r\n    \"cr519_loadexportno\", SortOrder.Descending,\r\n    \"cr519_linenumber\", SortOrder.Ascending\r\n   \r\n)\r\n"
+            TemplateFill: |-
+              =If(ThisItem.LoadExportSalesOrder = Gallery1.Selected.LoadExportSalesOrder,
+              RGBA(250, 255, 103, 0.8),RGBA(0, 0, 0, 0))
             Width: =1366
             Y: =217
           Children:
@@ -77,8 +79,8 @@ Screens:
                   Text: =ThisItem.LoadExportNo
                   VerticalAlign: =VerticalAlign.Top
                   Width: =155
-                  X: =50
-                  Y: =6
+                  X: =48
+                  Y: =28
             - Separator1:
                 Control: Rectangle@2.3.0
                 Properties:
@@ -100,6 +102,7 @@ Screens:
             - Title1_1:
                 Control: Label@2.5.1
                 Properties:
+                  Align: =Align.Center
                   BorderColor: =RGBA(0, 0, 0, 1)
                   Color: =RGBA(50, 49, 48, 1)
                   Font: =Font.'Open Sans'
@@ -110,12 +113,11 @@ Screens:
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
-                  Size: =14
+                  Size: =12
                   Text: =ThisItem.SalesOrderNo
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =152
-                  X: =219
-                  Y: =6
+                  Width: =131
+                  X: =203
+                  Y: =28
             - Title1_2:
                 Control: Label@2.5.1
                 Properties:
@@ -132,9 +134,9 @@ Screens:
                   Size: =14
                   Text: =ThisItem.LocationID
                   VerticalAlign: =VerticalAlign.Top
-                  Width: =164
-                  X: =680
-                  Y: =6
+                  Width: =127
+                  X: =660
+                  Y: =25
             - Title1_3:
                 Control: Label@2.5.1
                 Properties:
@@ -163,10 +165,11 @@ Screens:
                     */
                   VerticalAlign: =VerticalAlign.Top
                   Width: =78
-                  X: =925
-                  Y: =5
+                  X: =881
+                  Y: =24
             - Title1_4:
                 Control: Label@2.5.1
+                Group: Group2
                 Properties:
                   BorderColor: =RGBA(0, 0, 0, 1)
                   Color: =RGBA(50, 49, 48, 1)
@@ -179,10 +182,12 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =11
-                  Text: =ThisItem.pickerLoad
-                  Width: =194
-                  X: =1114
-                  Y: =6
+                  Text: |-
+                    ="Picker : " & ThisItem.pickerLoad
+                  Visible: =If(ThisItem.selectedLoad = 3,false,true)
+                  Width: =254
+                  X: =1047
+                  Y: =2
             - Title1_5:
                 Control: Label@2.5.1
                 Properties:
@@ -200,8 +205,8 @@ Screens:
                   Text: =ThisItem.LineNumber
                   VerticalAlign: =VerticalAlign.Top
                   Width: =34
-                  X: =6
-                  Y: =6
+                  X: =4
+                  Y: =28
             - Title1_6:
                 Control: Label@2.5.1
                 Properties:
@@ -209,7 +214,7 @@ Screens:
                   Color: =RGBA(50, 49, 48, 1)
                   Font: =Font.'Open Sans'
                   FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
-                  Height: =26
+                  Height: =64
                   OnSelect: =Select(Parent)
                   PaddingBottom: =0
                   PaddingLeft: =0
@@ -217,9 +222,8 @@ Screens:
                   PaddingTop: =0
                   Size: =14
                   Text: =ThisItem.MPN
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =300
-                  X: =371
+                  Width: =219
+                  X: =344
                   Y: =6
             - Title1_7:
                 Control: Label@2.5.1
@@ -238,21 +242,21 @@ Screens:
                   Text: =ThisItem.Quantity
                   VerticalAlign: =VerticalAlign.Top
                   Width: =54
-                  X: =853
-                  Y: =5
+                  X: =811
+                  Y: =25
             - Icon8:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   BorderColor: =RGBA(0, 18, 107, 1)
                   Color: =RGBA(77, 77, 77, 1)
-                  Height: =33
+                  Height: =41
                   Icon: =Icon.ChevronRight
                   OnSelect: |-
                     =Navigate(ViewScreen);
                     Set(LoadSelect,Gallery1.Selected.LoadExportNo);
-                  Width: =58
-                  X: =1308
-                  Y: =2
+                  Width: =65
+                  X: =1301
+                  Y: =22
             - Title1_16:
                 Control: Label@2.5.1
                 Properties:
@@ -270,8 +274,8 @@ Screens:
                   Text: =ThisItem.pickingTag
                   VerticalAlign: =VerticalAlign.Top
                   Width: =78
-                  X: =1019
-                  Y: =5
+                  X: =959
+                  Y: =24
             - locationInput:
                 Control: Classic/ComboBox@2.4.0
                 Properties:
@@ -293,13 +297,76 @@ Screens:
                   SelectMultiple: =false
                   SelectionColor: =RGBA(255, 255, 255, 1)
                   SelectionFill: =RGBA(56, 96, 178, 1)
-                  Visible: |-
+                  Size: =10
+                  Visible: |+
                     =If(IsBlank(LookUp(SNP_LoadExportSalesOrders,LoadExportSalesOrder = ThisItem.LoadExportSalesOrder,LocationID) 
                     //&& IsBlank(LoadBox.Selected)  
                     ),true,false)
-                  Width: =162
-                  X: =671
-                  Y: =6
+
+                  Width: =123
+                  X: =660
+                  Y: =21
+            - Title1_23:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =If(ThisItem.round = "Morning","รอบเช้า",ThisItem.round = "Afternoon","รอบบ่าย")
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =75
+                  X: =572
+                  Y: =25
+            - Title1_24:
+                Control: Label@2.5.1
+                Group: Group2
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    ="Stage : "&ThisItem.stage_user
+                  Visible: =If(ThisItem.checkedPick = 1,true,false)
+                  Width: =254
+                  X: =1047
+                  Y: =30
+            - Title1_25:
+                Control: Label@2.5.1
+                Group: Group2
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    ="Load : " & ThisItem.loading_user
+                  Visible: =If(ThisItem.loadingCheck = 1,true,false)
+                  Width: =254
+                  X: =1047
+                  Y: =56
       - LoadBox:
           Control: Classic/ComboBox@2.4.0
           Properties:
@@ -312,17 +379,21 @@ Screens:
             Font: =Font.'Open Sans'
             HoverFill: =RGBA(186, 202, 226, 1)
             InputTextPlaceholder: ="Find Load Export"
-            Items: |-
+            Items: |
               =ShowColumns(
                   SortByColumns(
                       GroupBy(
                           Filter(
                               SNP_LoadExportSalesOrders,
-                              DeliveryDate >= fromDatePicker_2.SelectedDate && DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate,1,TimeUnit.Days) && 
+                              DeliveryDate >= fromDatePicker_2.SelectedDate && DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate, 1, TimeUnit.Days) && 
                               WarehouseID <> "01-UN" &&
-                                  //IsBlank(LoadBox.Selected) || LoadExportNo = LoadBox.Selected.cr519_loadexportno,
-                              (IsBlank(PickBox.Selected) || selectedLoad = PickBox.Selected.Value),Company = companyText.Text),
-                          LoadExportNo,// ฟิลด์ที่ใช้จัดกลุ่ม
+                              (IsBlank(cmbPickingTag.Selected) || pickingTag = cmbPickingTag.Selected.Value) &&
+                              (IsBlank(RoundBox.Selected) || round = RoundBox.Selected.Value) &&
+                              (IsBlank(cmbPickerLoad.Selected) || pickerLoad = cmbPickerLoad.Selected.Value) &&
+                              (!IsBlank(MPN)) &&
+                              (IsBlank(PickBox.Selected) || selectedLoad = PickBox.Selected.Value),
+                              Company = companyText.Text)
+                              ,LoadExportNo,// ฟิลด์ที่ใช้จัดกลุ่ม
                           GroupedData
                       ),
                       "cr519_loadexportno",
@@ -337,8 +408,8 @@ Screens:
             SelectMultiple: =false
             SelectionColor: =RGBA(255, 255, 255, 1)
             SelectionFill: =RGBA(56, 96, 178, 1)
-            Width: =243
-            X: =394
+            Width: =182
+            X: =386
             Y: =107
       - companyText:
           Control: Classic/TextInput@2.3.2
@@ -387,8 +458,8 @@ Screens:
             SelectMultiple: =false
             SelectionColor: =RGBA(255, 255, 255, 1)
             SelectionFill: =RGBA(56, 96, 178, 1)
-            Width: =189
-            X: =679
+            Width: =154
+            X: =773
             Y: =107
       - Label1:
           Control: Label@2.5.1
@@ -398,7 +469,7 @@ Screens:
             Fill: =RGBA(127, 178, 57, 1)
             Font: =Font.'Open Sans'
             FontWeight: =FontWeight.Bold
-            Text: ="No    Load Export No         SO Number                        MPN                                                Location                   QTY"
+            Text: ="No    Load Export No         SO Number                        MPN                         Round       Location            QTY"
             Width: =1366
             Wrap: =false
             Y: =177
@@ -410,10 +481,10 @@ Screens:
             Fill: =RGBA(127, 178, 57, 1)
             Font: =Font.'Open Sans'
             FontWeight: =FontWeight.Bold
-            Text: ="     Status         Tag                           Picker"
-            Width: =465
+            Text: ="Status         Tag                     Picker&Checker"
+            Width: =481
             Wrap: =false
-            X: =896
+            X: =879
             Y: =177
       - Icon1:
           Control: Classic/Icon@2.5.0
@@ -434,6 +505,7 @@ Screens:
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             Fill: =RGBA(255, 0, 0, 1)
             Font: =Font.'Open Sans'
+            Height: =30
             HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
             HoverColor: =RGBA(255, 255, 255, 1)
             HoverFill: =ColorFade(RGBA(255, 0, 0, 100), -20%)
@@ -465,9 +537,9 @@ Screens:
             PressedFill: =Self.Color
             Text: ="Cancel"
             Visible: =If(IsBlank(LoadBox.Selected),false,true)
-            Width: =132
-            X: =1202
-            Y: =100
+            Width: =100
+            X: =1261
+            Y: =155
       - Button2:
           Control: Classic/Button@2.2.0
           Properties:
@@ -557,6 +629,9 @@ Screens:
               Reset(toDatePicker_2);
               Reset(LoadBox);
               Reset(PickBox);
+              Reset(cmbPickingTag);
+              Reset(cmbPickerLoad);
+              Reset(RoundBox);
             Width: =50
             X: =1043
             Y: =14
@@ -584,7 +659,7 @@ Screens:
             Font: =Font.'Open Sans'
             Height: =29
             Size: =10
-            Text: ="Version 0.9.235"
+            Text: ="Version 0.9.800"
             X: =1216
             Y: =739
       - cancelBT_1:
@@ -634,3 +709,142 @@ Screens:
             Width: =132
             X: =1043
             Y: =100
+      - cmbPickingTag:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Value"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Find Tag"
+            Items: |-
+              =Sort(
+                  Filter(
+                      Distinct(
+                          Filter(
+                              SNP_LoadExportSalesOrders,
+                              DeliveryDate >= fromDatePicker_2.SelectedDate &&
+                              DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate, 1, TimeUnit.Days)
+                          ),
+                          pickingTag
+                      ),
+                      !IsBlank(Value)
+                  ),
+                  Value,
+                  SortOrder.Ascending
+              )
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =121
+            X: =953
+            Y: =107
+      - cmbPickerLoad:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Value"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Find Picker"
+            Items: |-
+              =Sort(
+                  Filter(
+                      Distinct(
+                          Filter(
+                              SNP_LoadExportSalesOrders,
+                              DeliveryDate >= fromDatePicker_2.SelectedDate &&
+                              DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate, 1, TimeUnit.Days)
+                          ),
+                          pickerLoad
+                      ),
+                      !IsBlank(Value)
+                  ),
+                  Value,
+                  SortOrder.Ascending
+              )
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =241
+            X: =1093
+            Y: =107
+      - ReOpenBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 121, 187, 1)
+            Font: =Font.'Open Sans'
+            Height: =30
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(0, 121, 187, 100), -20%)
+            OnSelect: |-
+              =If(IsBlank(LoadBox.Selected),false,
+              ClearCollect(
+                  colFilteredItems,
+                  Filter(
+                      SNP_LoadExportSalesOrders,
+                      LoadExportNo = LoadBox.Selected.cr519_loadexportno
+                  )
+              );
+                  ForAll(
+                  colFilteredItems As item,
+                  Patch(
+                      SNP_LoadExportSalesOrders,
+                      item,
+                      {
+                          selectedLoad: 0,
+                          StatusApp:"Open"
+                      }
+                  )
+              );
+
+                  Refresh(SNP_LoadExportSalesOrders)
+                  )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Text: ="Re-Open"
+            Visible: =If(!IsBlank(LoadBox.Selected) && LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadBox.Selected.cr519_loadexportno,selectedLoad) = 3,true,false)
+            Width: =106
+            X: =1141
+            Y: =155
+      - RoundBox:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Value"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Find Round"
+            Items: =["Morning","Afternoon"]
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =154
+            X: =593
+            Y: =107
