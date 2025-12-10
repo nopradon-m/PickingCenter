@@ -1,0 +1,773 @@
+Screens:
+  RouteScreen:
+    Properties:
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+      OnVisible: |-
+        =//Select(clearfilter);
+        Reset(sortByBox);
+        Set(varSortOrder, SortOrder.Descending)
+    Children:
+      - Rectangle5:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 0, 0, 1)
+            BorderStyle: =BorderStyle.Dashed
+            BorderThickness: =1
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =60
+            Width: =396
+            X: =723
+            Y: =149
+      - header_2:
+          Control: CanvasComponent
+          ComponentName: header
+          Properties:
+            Height: =77
+            Width: =1366
+      - Icon2:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =47
+            Icon: =Icon.ChevronLeft
+            OnSelect: =Back();
+            Width: =46
+            X: =29
+            Y: =15
+      - cmbDestination:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Title"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Select Route"
+            Items: =whDestinationCode
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Title"]
+            SelectMultiple: =false
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =174
+            X: =536
+            Y: =107
+      - Gallery2:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_TwoTextVariant_ver5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Height: =476
+            Items: "=AddColumns(\r\n    ShowColumns(\r\n        SortByColumns(\r\n            GroupBy(\r\n                Filter(\r\n                    SNP_LoadExportSalesOrders,\r\n                    DeliveryDate >= fromDatePicker.SelectedDate &&\r\n                    DeliveryDate < DateAdd(toDatePicker.SelectedDate, 1, TimeUnit.Days) &&\r\n                    selectedLoad <> 3 &&\r\n                    (Company = \"dep\") &&\r\n                    WarehouseID <> \"01-UN\" &&\r\n                    (IsBlank(cmbDestination.Selected.Title) || DestinationCode = cmbDestination.Selected.Title) &&\r\n                    (IsBlank(cmbLoad.SelectedItems) || LoadExportNo in cmbLoad.SelectedItems.cr519_loadexportno) &&\r\n                    (IsBlank(cmbInvoice.SelectedItems) || InvoiceNumber in cmbInvoice.SelectedItems.crcfe_invoicenumber) &&\r\n                    (IsBlank(cmbRound.Selected.Value) || round = cmbRound.Selected.Value) &&\r\n                    (IsBlank(cmbdDriver.Selected.Title) || driver = cmbdDriver.Selected.Title)&&\r\n                    (IsBlank(cmbFleet.Selected.Value) || FleetNo = cmbFleet.Selected.Value)\r\n                ),\r\n                LoadExportNo,CustomerName,DestinationCode,driver,  // ฟิลด์ที่ใช้จัดกลุ่ม\r\n                GroupedData\r\n            ),\r\n            sortByBox.Selected.Value,\r\n            varSortOrder\r\n        ),\r\n        cr519_loadexportno, GroupedData\r\n    ),\r\n    LatestRecord,\r\n    First(GroupedData) // ดึงรายการแรกจากแต่ละกลุ่ม\r\n)\r\n\r\n/*\r\nSortByColumns(\r\n    Filter(\r\n        SNP_LoadExportSalesOrders,\r\n        DeliveryDate >= fromDatePicker_2.SelectedDate &&\r\n        DeliveryDate <= DateAdd(toDatePicker_2.SelectedDate, 1, TimeUnit.Days) &&\r\n        (IsBlank(LoadBox.Selected) || LoadExportNo = LoadBox.Selected.cr519_loadexportno) &&\r\n        WarehouseID <> \"01-UN\" &&\r\n        (Company = companyText.Text || Company = \"dep\") &&\r\n            (IsBlank(PickBox.Selected) || \r\n            (PickBox.Selected.Value = 0 && StatusApp = \"Open\") ||\r\n            (PickBox.Selected.Value = 1 && StatusApp = \"Picking\") ||\r\n            (PickBox.Selected.Value = 2 && StatusApp = \"Picked\") ||\r\n            (PickBox.Selected.Value = 3 && StatusApp = \"Cancel\") ||\r\n            (PickBox.Selected.Value = 4 && StatusApp = \"Staged\") ||\r\n            (PickBox.Selected.Value = 5 && StatusApp = \"Loaded\")\r\n            )\r\n    ),\r\n    //\"createdon\", SortOrder.Descending,\r\n    \"cr519_loadexportno\", SortOrder.Descending,\r\n    \"cr519_linenumber\", SortOrder.Ascending\r\n   \r\n)\r\n\r\n//////\r\n\r\n\r\nWith(\r\n    {\r\n        FilteredData: GroupBy(\r\n            Filter(\r\n                SNP_LoadExportSalesOrders,\r\n                selectedLoad = 2,\r\n                //'Created On' = Today(),\r\n                IsBlank(cmbDestination.Selected.Title) || DestinationCode = cmbDestination.Selected.Title,\r\n                IsBlank(cmbRound.Selected.Value) || round = cmbRound.Selected.Value\r\n            ),\r\n            LoadExportNo,\r\n            ComfirmList\r\n        )\r\n    },\r\n    ForAll(\r\n        Sequence(CountRows(FilteredData)),\r\n        Patch(\r\n            Last(FirstN(FilteredData, Value)),\r\n            {RunningNumber: Value}\r\n        )\r\n    )\r\n)\r\n*/"
+            TemplateFill: |-
+              =If(ThisItem.cr519_loadexportno=Gallery2.Selected.cr519_loadexportno,
+              RGBA(255, 250, 206, 0.8),RGBA(0, 0, 0, 0))
+            TemplateSize: =91
+            Width: =1366
+            Y: =250
+          Children:
+            - Title1_8:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =ThisItem.cr519_loadexportno
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =200
+                  X: =147
+                  Y: =12
+            - Separator1_1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Height: =8
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - Self.Height
+            - Rectangle1_1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(0, 18, 107, 1)
+                  Height: =Parent.TemplateHeight - Separator1_1.Height
+                  OnSelect: =Select(Parent)
+                  Visible: =ThisItem.IsSelected
+                  Width: =4
+            - Title1_9:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,InvoiceNumber)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =200
+                  X: =147
+                  Y: =38
+            - routeData:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,DestinationCode)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =131
+                  Wrap: =false
+                  X: =688
+                  Y: =42
+            - Title1_13:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =//ThisItem.RunningNumber
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =32
+                  X: =23
+                  Y: =16
+            - Title1_15:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =//ThisItem.crcfe_confirmed
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =54
+                  X: =929
+                  Y: =5
+            - driverData:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  Overflow: =Overflow.Scroll
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =10
+                  Size: =12
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,driver)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =209
+                  X: =843
+                  Y: =42
+            - Title1_10:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =27
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =Text(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,DeliveryDate),"dd/mm/yyyy")
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =104
+                  X: =23
+                  Y: =16
+            - Title1_20:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,CustomerCode)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =183
+                  X: =359
+                  Y: =5
+            - Title1_21:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =45
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,CustomerName)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =317
+                  X: =359
+                  Y: =38
+            - roundData:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: |-
+                    =If(
+                    LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,round) = "Afternoon","รอบบ่าย","รอบเช้า")
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =131
+                  Wrap: =false
+                  X: =688
+                  Y: =5
+            - driverData_2:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =75
+                  OnSelect: =Select(Parent)
+                  Overflow: =Overflow.Scroll
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,whRemark)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =232
+                  X: =1076
+                  Y: =8
+            - Icon5:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =RGBA(128, 128, 128, 1)
+                  Height: =40
+                  Icon: =Icon.ChevronRight
+                  OnSelect: |-
+                    =Navigate(ViewScreen);
+                    Set(LoadSelect,Gallery2.Selected.cr519_loadexportno);
+                  Width: =47
+                  X: =1308
+                  Y: =21
+            - driverData_3:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =26
+                  OnSelect: =Select(Parent)
+                  Overflow: =Overflow.Scroll
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: |-
+                    ="Fleet No: " & LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,FleetNo)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =198
+                  X: =843
+                  Y: =12
+            - Title1_22:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(50, 49, 48, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =27
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = ThisItem.cr519_loadexportno,pickingTag)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =104
+                  X: =23
+                  Y: =47
+      - Label1_2:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(127, 178, 57, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Bold
+            Text: ="  Delivery Date      Document Number            Customer                                                    Round/Route                      Driver                                       Remark "
+            Width: =1366
+            Wrap: =false
+            Y: =210
+      - cmbRound:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Value"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Select Round"
+            Items: =["Morning","Afternoon"]
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =165
+            X: =351
+            Y: =107
+      - printRouteBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(255, 0, 0, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(255, 0, 0, 100), -20%)
+            OnSelect: "=If(\r\n    !IsBlank(cmbDestination.Selected) && !IsBlank(cmbRound.Selected) && !IsBlank(cmbdDriver.Selected),\r\n    \r\n    // 1. เก็บข้อมูลจาก Gallery2 ลงตัวแปรชั่วคราว\r\n    ClearCollect(colTempRouteData, Gallery2.AllItems);\r\n    \r\n    // 2. สร้าง Collection ใหม่ (colPrintPages) ที่เพิ่มเลขบรรทัด (RowID) เข้าไป\r\n    ClearCollect(\r\n        colPrintPages,\r\n        ForAll(\r\n            Sequence(CountRows(colTempRouteData)), \r\n            Patch(\r\n                Index(colTempRouteData, Value), \r\n                { RowID: Value }\r\n            )\r\n        )\r\n    );\r\n\r\n    // 3. ตั้งค่าตัวแปรสำหรับเปลี่ยนหน้า\r\n    Set(varPageSize, 18); // กำหนดจำนวนแถวต่อหน้า (18 แถว)\r\n    Set(currentPage, 1);  // เริ่มต้นที่หน้า 1\r\n    Set(AllNumberPage, RoundUp(CountRows(colTempRouteData) / varPageSize, 0)); // คำนวณจำนวนหน้าทั้งหมด\r\n\r\n    // 4. ไปที่หน้า Print\r\n    Navigate(PrintScreen),\r\n    \r\n    // กรณีข้อมูลไม่ครบ\r\n    Notify(\"เลือกเส้นทาง รอบส่ง และ พนักงานขับรถก่อนปริ้น\", NotificationType.Error)\r\n);"
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Text: ="Print"
+            X: =1184
+            Y: =15
+      - cmbdDriver:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Title"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Select Driver"
+            Items: =driverDelivery
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Title"]
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =270
+            X: =847
+            Y: =107
+      - updateDriverBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: |-
+              =
+              If(!IsBlank(cmbdDriver.Selected),
+              ForAll(
+                  Gallery2.AllItems As gItem,
+                  UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = gItem.cr519_loadexportno,
+                   {
+                          driver: cmbdDriver.Selected.Title
+                      }
+                  );
+              Notify("อัปเดตชื่อคนขับสำเร็จ", NotificationType.Success)
+              )
+              ,Notify("โปรดระบุชื่อคนขับรถ", NotificationType.Error)
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Text: ="Update Driver"
+            Visible: =false
+            X: =1184
+            Y: =72
+      - Icon4:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =38
+            Icon: =Icon.Reload
+            OnSelect: =Refresh(SNP_LoadExportSalesOrders)
+            Width: =44
+            X: =1129
+            Y: =19
+      - fromDatePicker:
+          Control: Classic/DatePicker@2.6.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            IconBackground: =RGBA(56, 96, 178, 1)
+            IconFill: =RGBA(255, 255, 255, 1)
+            OnChange: =Reset(cmbLoad)
+            Width: =150
+            X: =16
+            Y: =107
+      - toDatePicker:
+          Control: Classic/DatePicker@2.6.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            IconBackground: =RGBA(56, 96, 178, 1)
+            IconFill: =RGBA(255, 255, 255, 1)
+            OnChange: |-
+              =If(toDatePicker.SelectedDate < fromDatePicker.SelectedDate,
+              Reset(toDatePicker);
+              Reset(fromDatePicker);
+              Notify("วันที่ To Date ต้องมากกว่า From Date",NotificationType.Error))
+            Width: =150
+            X: =182
+            Y: =107
+      - Label3:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(152, 208, 70, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Bold
+            Size: =20
+            Text: =CountRows(Gallery2.AllItems) & " Row(s)"
+            Width: =1366
+            Y: =728
+      - cmbLoad:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["cr519_loadexportno"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Select Load"
+            Items: |-
+              =ShowColumns(
+                      SortByColumns(
+                          GroupBy(
+                              Filter(
+                                  SNP_LoadExportSalesOrders,
+                                  DeliveryDate >= fromDatePicker.SelectedDate &&
+                                  DeliveryDate < DateAdd(toDatePicker.SelectedDate, 1, TimeUnit.Days) &&
+                                  selectedLoad <> 3 &&
+                                  (Company = "dep") &&
+                                  WarehouseID <> "01-UN" &&
+                                  (IsBlank(cmbDestination.Selected.Title) || DestinationCode = cmbDestination.Selected.Title) &&
+                                  (IsBlank(cmbRound.Selected.Value) || round = cmbRound.Selected.Value) &&
+                                  (IsBlank(cmbdDriver.Selected.Title) || driver = cmbdDriver.Selected.Title)
+                              ),
+                              LoadExportNo,CustomerName,DestinationCode,driver,  // ฟิลด์ที่ใช้จัดกลุ่ม
+                              GroupedData
+                          ),
+                          sortByBox.Selected.Value,
+                          varSortOrder
+                      ),
+                      cr519_loadexportno, GroupedData
+                  )
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["cr519_loadexportno"]
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =213
+            X: =1137
+            Y: =107
+      - Label5:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =30
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Text: ="From Date"
+            X: =16
+            Y: =77
+      - Label5_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =30
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Text: ="To Date"
+            X: =182
+            Y: =77
+      - clearfilter:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =38
+            Icon: =Icon.FilterFlat
+            OnSelect: |-
+              =Reset(fromDatePicker);
+              Reset(toDatePicker);
+              Reset(cmbLoad);
+              Reset(cmbDestination);
+              Reset(cmbdDriver);
+              Reset(cmbRound);
+              Reset(sortByBox);
+              Reset(cmbInvoice);
+            Width: =50
+            X: =1069
+            Y: =19
+      - Icon6:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =55
+            Icon: =Icon.Add
+            OnSelect: =Navigate(RouteNewScreen);NewForm(Form1);
+            Width: =59
+            X: =645
+            Y: =10
+      - sortByBox:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DefaultSelectedItems: |-
+              ={ Text: "Load Export Number", Value: "cr519_loadexportno" }
+            DisplayFields: =["Text"]
+            Font: =Font.'Open Sans'
+            Height: =38
+            HoverFill: =RGBA(186, 202, 226, 1)
+            Items: |+
+              =Table(
+                  { Text: "Customer Name", Value: "cr519_customername" },
+                  { Text: "Route", Value: "crcfe_destinationcode" },
+                  { Text: "Driver", Value: "crcfe_driver" },
+                  { Text: "Load Export Number", Value: "cr519_loadexportno" }
+              )
+            OnChange: =//Select(Button4);
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Text"]
+            SelectMultiple: =false
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =241
+            X: =712
+            Y: =19
+      - clearfilter_3:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =38
+            Icon: =Icon.Sort
+            OnSelect: |+
+              =Set(varSortOrder, 
+                  If(varSortOrder = SortOrder.Descending, 
+                     SortOrder.Ascending, 
+                     SortOrder.Descending
+                  )
+              )
+            Width: =44
+            X: =978
+            Y: =18
+      - cmbFleet:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Value"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Fleet"
+            Items: =["1","2","3","4","5"]
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Value"]
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =110
+            X: =723
+            Y: =107
+      - cmbInvoice:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["crcfe_invoicenumber"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Select Invoice"
+            Items: |-
+              =ShowColumns(
+                      SortByColumns(
+                          GroupBy(
+                              Filter(
+                                  SNP_LoadExportSalesOrders,
+                                  DeliveryDate >= fromDatePicker.SelectedDate &&
+                                  DeliveryDate < DateAdd(toDatePicker.SelectedDate, 1, TimeUnit.Days) &&
+                                  selectedLoad <> 3 &&
+                                  (Company = "dep") &&
+                                  WarehouseID <> "01-UN" &&
+                                  (IsBlank(cmbDestination.Selected.Title) || DestinationCode = cmbDestination.Selected.Title) &&
+                                  (IsBlank(cmbRound.Selected.Value) || round = cmbRound.Selected.Value) &&
+                                  (IsBlank(cmbdDriver.Selected.Title) || driver = cmbdDriver.Selected.Title)
+                              ),
+                              LoadExportNo,InvoiceNumber,CustomerName,DestinationCode,driver,  // ฟิลด์ที่ใช้จัดกลุ่ม
+                              GroupedData
+                          ),
+                          sortByBox.Selected.Value,
+                          varSortOrder
+                      ),
+                          crcfe_invoicenumber, GroupedData
+                  )
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["crcfe_invoicenumber"]
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =213
+            X: =1137
+            Y: =161
+      - cmbdDriver_2:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            ChevronBackground: =RGBA(56, 96, 178, 1)
+            ChevronFill: =RGBA(255, 255, 255, 1)
+            ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            ChevronHoverFill: =RGBA(255, 255, 255, 1)
+            DisplayFields: =["Title"]
+            Font: =Font.'Open Sans'
+            HoverFill: =RGBA(186, 202, 226, 1)
+            InputTextPlaceholder: ="Select Driver"
+            Items: =driverDelivery
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(0, 18, 107, 1)
+            SearchFields: =["Title"]
+            SelectionColor: =RGBA(255, 255, 255, 1)
+            SelectionFill: =RGBA(56, 96, 178, 1)
+            Width: =244
+            X: =734
+            Y: =159
+      - UpdateDriverBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: =
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =14
+            Text: ="Update"
+            Width: =106
+            X: =992
+            Y: =159
