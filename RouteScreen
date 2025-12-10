@@ -730,7 +730,7 @@ Screens:
             Width: =213
             X: =1137
             Y: =161
-      - cmbdDriver_2:
+      - cmbdDriver_update:
           Control: Classic/ComboBox@2.4.0
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
@@ -746,6 +746,7 @@ Screens:
             PressedColor: =RGBA(255, 255, 255, 1)
             PressedFill: =RGBA(0, 18, 107, 1)
             SearchFields: =["Title"]
+            SelectMultiple: =false
             SelectionColor: =RGBA(255, 255, 255, 1)
             SelectionFill: =RGBA(56, 96, 178, 1)
             Width: =244
@@ -762,7 +763,31 @@ Screens:
             HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
             HoverColor: =RGBA(255, 255, 255, 1)
             HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
-            OnSelect: =
+            OnSelect: |+
+              =If(
+                  !IsBlank(cmbdDriver_update.Selected) &&
+                  !IsBlank(cmbRound.Selected) &&
+                  !IsBlank(cmbDestination.Selected),
+
+                  Notify("กำลังบันทึกข้อมูล...", NotificationType.Information);
+
+              Patch(
+                  SNP_LoadExportSalesOrders,
+                  ForAll(
+                      Ungroup(Gallery2.AllItems, GroupedData),
+                      {
+                          cr519_loadexportsalesorderid: ThisRecord.cr519_loadexportsalesorderid, 
+                          driver: cmbdDriver_update.Selected.Title
+                      }
+                  )
+              );
+
+                  Notify("อัปเดตชื่อคนขับสำเร็จทุกรายการ", NotificationType.Success);
+                  Refresh(SNP_LoadExportSalesOrders);
+                  Reset(cmbdDriver_update);,
+
+                  Notify("โปรดระบุชื่อคนขับรถ รอบที่จัดส่ง และเส้นทางให้ครบถ้วน", NotificationType.Error)
+              )
             PressedBorderColor: =Self.Fill
             PressedColor: =Self.Fill
             PressedFill: =Self.Color
