@@ -1,0 +1,723 @@
+Screens:
+  ViewScreen:
+    Properties:
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+      OnVisible: =Set(varTabSelection,1);
+    Children:
+      - header_4:
+          Control: CanvasComponent
+          ComponentName: header
+          Properties:
+            Height: =77
+            Width: =1366
+      - Icon2_2:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =47
+            Icon: =Icon.ChevronLeft
+            OnSelect: =Back();
+            Width: =46
+            X: =29
+            Y: =15
+      - ContainerDetail:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderThickness: =1
+            Height: =601
+            Visible: =varTabSelection=1
+            Width: =1309
+            X: =29
+            Y: =151
+          Children:
+            - lblLoadExportNumber:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,LoadExportNo)
+                  Width: =275
+                  X: =199
+                  Y: =51
+            - lblDetails:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(219, 219, 219, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =38
+                  Text: ="รายละเอียด"
+                  Width: =1309
+            - lblLoadNumberLabel:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Load Number :"
+                  Width: =141
+                  X: =27
+                  Y: =51
+            - lblLoadNumberLabel_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Dalivery Date :"
+                  Width: =141
+                  X: =829
+                  Y: =51
+            - deliveryDatePicker_2:
+                Control: Classic/DatePicker@2.6.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DefaultDate: =DateValue(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,DeliveryDate))
+                  Font: =Font.'Open Sans'
+                  IconBackground: =RGBA(56, 96, 178, 1)
+                  IconFill: =RGBA(255, 255, 255, 1)
+                  OnChange: |-
+                    =UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{DeliveryDate: deliveryDatePicker_2.SelectedDate});
+                  Width: =239
+                  X: =993
+                  Y: =51
+            - lblLoadNumberLabel_2:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Customer Code :"
+                  Width: =159
+                  X: =27
+                  Y: =195
+            - lblLoadNumberLabel_3:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Customer Name :"
+                  Width: =172
+                  X: =27
+                  Y: =236
+            - lblLoadExportNumber_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,CustomerCode)
+                  Width: =617
+                  X: =199
+                  Y: =195
+            - lblLoadExportNumber_2:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =68
+                  PaddingTop: =10
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,CustomerName)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =617
+                  X: =199
+                  Y: =236
+            - lblLoadNumberLabel_4:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Invoice Number :"
+                  Width: =159
+                  X: =27
+                  Y: =92
+            - lblLoadExportNumber_3:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,InvoiceNumber)
+                  Width: =294
+                  X: =199
+                  Y: =91
+            - lblLoadNumberLabel_5:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Round :"
+                  Width: =141
+                  X: =829
+                  Y: =112
+            - roundDropdown_2:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  AllowEmptySelection: =true
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  ChevronBackground: =RGBA(56, 96, 178, 1)
+                  ChevronFill: =RGBA(255, 255, 255, 1)
+                  ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                  ChevronHoverFill: =RGBA(255, 255, 255, 1)
+                  Default: =If(IsBlank(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,round)),"",LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,round))
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  HoverFill: =RGBA(186, 202, 226, 1)
+                  Items: =["Morning","Afternoon"]
+                  Items.Value: =Value
+                  OnChange: |-
+                    =UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{round: roundDropdown_2.Selected.Value});
+                    //Reset(roundDropdown_2)
+                  OnSelect: =
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =RGBA(0, 18, 107, 1)
+                  SelectionColor: =RGBA(255, 255, 255, 1)
+                  SelectionFill: =RGBA(56, 96, 178, 1)
+                  Width: =239
+                  X: =993
+                  Y: =112
+            - lblLoadNumberLabel_6:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Route :"
+                  Width: =141
+                  X: =829
+                  Y: =174
+            - lblLoadNumberLabel_7:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Driver :"
+                  Width: =141
+                  X: =829
+                  Y: =293
+            - routeDropdown_2:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  AllowEmptySelection: =true
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  ChevronBackground: =RGBA(56, 96, 178, 1)
+                  ChevronFill: =RGBA(255, 255, 255, 1)
+                  ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                  ChevronHoverFill: =RGBA(255, 255, 255, 1)
+                  Default: =If(IsBlank(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,DestinationCode)),"",LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,DestinationCode))
+                  Font: =Font.'Open Sans'
+                  Height: =42
+                  HoverFill: =RGBA(186, 202, 226, 1)
+                  Items: =whDestinationCode
+                  Items.Value: =Title
+                  OnChange: |-
+                    =UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{DestinationCode: routeDropdown_2.Selected.Title});
+                    //Reset(routeDropdown_2)
+                  OnSelect: =
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =RGBA(0, 18, 107, 1)
+                  SelectionColor: =RGBA(255, 255, 255, 1)
+                  SelectionFill: =RGBA(56, 96, 178, 1)
+                  Width: =239
+                  X: =993
+                  Y: =176
+            - driverDropdown_2:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  AllowEmptySelection: =true
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  ChevronBackground: =RGBA(56, 96, 178, 1)
+                  ChevronFill: =RGBA(255, 255, 255, 1)
+                  ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                  ChevronHoverFill: =RGBA(255, 255, 255, 1)
+                  Default: =If(IsBlank(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,driver)),"",LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,driver))
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  HoverFill: =RGBA(186, 202, 226, 1)
+                  Items: =driverDelivery
+                  Items.Value: =Title
+                  OnChange: |-
+                    =//UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{driver: driverDropdown_2.Selected.Title});
+                    //Reset(driverDropdown_2)
+
+                    Patch(
+                        SNP_LoadExportSalesOrders,
+                        ForAll(
+                            Gallery2.Selected.GroupedData,
+                            {
+                                cr519_loadexportsalesorderid: ThisRecord.cr519_loadexportsalesorderid, 
+                                driver: Self.Selected.Title
+                            }
+                        )
+                    );
+                  OnSelect: =
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =RGBA(0, 18, 107, 1)
+                  SelectionColor: =RGBA(255, 255, 255, 1)
+                  SelectionFill: =RGBA(56, 96, 178, 1)
+                  Width: =239
+                  X: =993
+                  Y: =298
+            - lblLoadNumberLabel_8:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Delivery Address :"
+                  Width: =172
+                  X: =27
+                  Y: =303
+            - lblLoadExportNumber_4:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =68
+                  Overflow: =Overflow.Scroll
+                  PaddingTop: =10
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,DeliveryAddress)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =617
+                  X: =199
+                  Y: =302
+            - lblLoadNumberLabel_9:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Remark Picking :"
+                  Width: =172
+                  X: =24
+                  Y: =375
+            - lblLoadExportNumber_5:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =68
+                  PaddingTop: =10
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,RemarkPicking)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =601
+                  X: =196
+                  Y: =375
+            - lblLoadNumberLabel_10:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Logistic Remark:"
+                  Width: =172
+                  X: =27
+                  Y: =453
+            - whRemarkInput:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Default: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,whRemark)
+                  Font: =Font.'Open Sans'
+                  Height: =107
+                  HoverBorderColor: =RGBA(0, 18, 107, 1)
+                  HoverFill: =RGBA(186, 202, 226, 1)
+                  Mode: =TextMode.MultiLine
+                  OnChange: |-
+                    =UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{whRemark: whRemarkInput.Text});
+                  Width: =598
+                  X: =199
+                  Y: =453
+            - lblLoadNumberLabel_11:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="SO Number :"
+                  Width: =159
+                  X: =493
+                  Y: =51
+            - lblLoadExportNumber_6:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,SalesOrderNo)
+                  Width: =151
+                  X: =665
+                  Y: =51
+            - lblLoadExportNumber_7:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =63
+                  Overflow: =Overflow.Scroll
+                  PaddingTop: =10
+                  Text: =LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,InvoiceAddress)
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =617
+                  X: =199
+                  Y: =132
+            - lblLoadNumberLabel_12:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Invoice Address :"
+                  Width: =172
+                  X: =27
+                  Y: =135
+            - lblLoadNumberLabel_13:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Height: =41
+                  Text: ="Fleet :"
+                  Width: =141
+                  X: =829
+                  Y: =239
+            - driverDropdown_3:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  AllowEmptySelection: =true
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  ChevronBackground: =RGBA(56, 96, 178, 1)
+                  ChevronFill: =RGBA(255, 255, 255, 1)
+                  ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                  ChevronHoverFill: =RGBA(255, 255, 255, 1)
+                  Default: =If(IsBlank(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,FleetNo)),"",LookUp(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,FleetNo))
+                  Font: =Font.'Open Sans'
+                  Height: =41
+                  HoverFill: =RGBA(186, 202, 226, 1)
+                  Items: =["1","2","3","4","5"]
+                  Items.Value: =Value
+                  OnChange: |-
+                    =UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{FleetNo: driverDropdown_3.Selected.Value});
+                    //Reset(driverDropdown_2)
+                  OnSelect: =
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =RGBA(0, 18, 107, 1)
+                  SelectionColor: =RGBA(255, 255, 255, 1)
+                  SelectionFill: =RGBA(56, 96, 178, 1)
+                  Width: =239
+                  X: =993
+                  Y: =238
+            - invoiceInput:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Default: =
+                  Font: =Font.'Open Sans'
+                  HintText: ="Please Insert Invoice Number"
+                  HoverBorderColor: =RGBA(0, 18, 107, 1)
+                  HoverFill: =RGBA(186, 202, 226, 1)
+                  OnChange: |-
+                    =UpdateIf(SNP_LoadExportSalesOrders,LoadExportNo = lblLoadExportNumber.Text,{FleetNo: driverDropdown_3.Selected.Value});
+                  Visible: =If(IsBlank(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect,InvoiceNumber)),true,false)
+                  X: =199
+                  Y: =91
+      - ContainerItemList:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderThickness: =1
+            Height: =601
+            Visible: =varTabSelection=2
+            Width: =1309
+            X: =29
+            Y: =151
+          Children:
+            - lblBrand:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(130, 141, 158, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Size: =15
+                  Text: ="Brand"
+                  Width: =197
+            - Gallery6:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextVariant_ver5.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Height: =561
+                  Items: =Filter(SNP_LoadExportSalesOrders,LoadExportNo = LoadSelect)
+                  TemplateSize: =40
+                  Width: =1309
+                  Y: =40
+                Children:
+                  - lblItemMPN:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        BorderThickness: =1
+                        Font: =Font.'Open Sans'
+                        FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =ThisItem.MPN
+                        Width: =250
+                        X: =197
+                  - lblItemProductName:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        BorderThickness: =1
+                        Font: =Font.'Open Sans'
+                        FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =3
+                        PaddingRight: =3
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =LookUp(SNP_ItemMasters,ItemID = ThisItem.ItemID,ProductName)
+                        Width: =552
+                        X: =447
+                  - Rectangle8:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Fill: =RGBA(0, 18, 107, 1)
+                        Height: =
+                        OnSelect: =Select(Parent)
+                        Visible: =ThisItem.IsSelected
+                        Width: =4
+                  - lblItemQuantity:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        BorderThickness: =1
+                        Font: =Font.'Open Sans'
+                        FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =ThisItem.Quantity
+                        Width: =128
+                        X: =999
+                  - lblItemID:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        BorderThickness: =1
+                        Font: =Font.'Open Sans'
+                        FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                        Height: =29
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =ThisItem.ItemID
+                        Visible: =false
+                        Width: =179
+                        X: =1127
+                  - lblItemBrandID:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        BorderThickness: =1
+                        Font: =Font.'Open Sans'
+                        FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =LookUp(SNP_ItemMasters,ItemID = ThisItem.ItemID,BrandID)
+                        Width: =197
+                  - lblItemUnit:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        BorderThickness: =1
+                        Font: =Font.'Open Sans'
+                        FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =ThisItem.unit
+                        Width: =182
+                        X: =1127
+            - lblMPN:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(130, 141, 158, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Size: =15
+                  Text: ="MPN"
+                  Width: =250
+                  X: =197
+            - lblProductName:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(130, 141, 158, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Size: =15
+                  Text: ="Product Name"
+                  Width: =552
+                  X: =447
+            - lblQuantity:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(130, 141, 158, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Size: =15
+                  Text: ="QTY"
+                  Width: =129
+                  X: =999
+            - lblUnit:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(130, 141, 158, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Bold
+                  Size: =15
+                  Text: ="Unit"
+                  Width: =180
+                  X: =1128
+      - detailBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: =Set(varTabSelection,1);
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Text: ="Detail"
+            Width: =245
+            X: =411
+            Y: =111
+      - itemListBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: =Set(varTabSelection,2);
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Text: ="Items"
+            Width: =245
+            X: =681
+            Y: =111
+      - removeRowBT:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(255, 0, 0, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(255, 0, 0, 100), -20%)
+            OnSelect: |-
+              =RemoveIf(SNP_LoadExportSalesOrders,LoadExportNo = Gallery2.Selected.cr519_loadexportno);
+              Back();
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Text: ="Delete"
+            Visible: =If(LookUp(SNP_LoadExportSalesOrders,LoadExportNo = Gallery2.Selected.cr519_loadexportno,freeLineRoute) = 1,true,false)
+            X: =1175
+            Y: =18
+      - Button3:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: =ClearCollect(abc,Gallery2.Selected.GroupedData)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            X: =149
+            Y: =86
